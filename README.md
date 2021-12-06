@@ -9,7 +9,9 @@ Providing you a nice little place to record your daily feelings...
 Features:
 
 Minimalist UI
+
 Cloud Storage
+
 Share with others (developing)
 
 # Screenshots
