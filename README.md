@@ -1,12 +1,12 @@
 # App Name
 Days
 
-# Elevator pitch
+# What is it?
 A diary application
 
-Providing you a nice little place to record your daily feelings...
+Provides you a nice little place to record your daily feelings...
 
-Features:
+# Features..?
 
 Minimalist UI
 
