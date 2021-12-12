@@ -1,18 +1,26 @@
 # App Name
 Days
 
-# What is it?
+# Elevator pitch
 A diary application
 
-Provides you a nice little place to record your daily feelings...
+Provides you a nice little place to record your daily feelings!
 
-# Features..?
+Features:
 
 Minimalist UI
 
 Cloud Storage
 
 Share with others (developing)
+
+# Developer notes 
+Front-end: React native
+Back-end: Express on Node.js
+Login system: Using AsyncStorage to store the cookie at front-end
+
+# Link to movie
+https://drive.google.com/file/d/1jHuXMxs4mi1RymhyGUWV1rN7G_7eabca/view?usp=sharing
 
 # Screenshots
 ![21341638773959_ pic_hd](https://user-images.githubusercontent.com/49468143/144807533-e4c17ddf-1ed6-4c7c-ad9f-4ff1a2b9aae1.jpg)
