@@ -1,6 +1,11 @@
 # App Name
 Days
 
+# Author
+Yuxuan Liu
+
+yuxuanliu@brandeis.edu
+
 # Elevator pitch
 A diary application
 
