@@ -8,15 +8,17 @@ Provides you a nice little place to record your daily feelings!
 
 Features:
 
-Minimalist UI
+ - Minimalist UI
 
-Cloud Storage
+ - Cloud Storage
 
-Share with others (developing)
+ - Share with others (developing)
 
 # Developer notes 
 Front-end: React native
+
 Back-end: Express on Node.js
+
 Login system: Using AsyncStorage to store the cookie at front-end
 
 # Link to movie
