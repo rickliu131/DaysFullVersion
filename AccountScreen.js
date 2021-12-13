@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, StyleSheet, Image, Button, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-simple-toast';
 import url from './url';
@@ -159,7 +159,7 @@ const AccountScreen = () => {
           </View>
           <View style={styles.input_boxs_container}>
             <View><TextInput style={styles.input_boxs} value={id} onChangeText={(t) => setID(t)} placeholder='🆔'/></View>
-            <View><TextInput style={styles.input_boxs} value={pwd} onChangeText={(t) => setPWD(t)} secureTextEntry={true} placeholder='🔑'/></View>
+            <View><TextInput style={styles.input_boxs} value={pwd} onChangeText={(t) => setPWD(t)} placeholder='🔑'/></View>
           </View>
         </View>
         <View>
