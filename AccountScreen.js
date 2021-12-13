@@ -1,239 +1,126 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, StyleSheet, Image, Button, TouchableOpacity } from 'react-native';
+// 'use strict';
+
+import React, { useState } from 'react';
+import { View, Text, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Toast from 'react-native-simple-toast';
 import url from './url';
 import MyButton from './MyButton';
 
-const AccountScreen = () => {
+const BGColorContext = React.createContext(null);
 
-  const [loginStatus, setLoginStatus] = useState(0);
-  const [id, setID] = useState('');
-  const [pwd, setPWD] = useState('');
-  const [userInfo, setUserInfo] = useState({});
+function SettingsScreen() {
 
-  const update = async() => {
-    await fetch(url.clearCookie);
-    try {
-      const res_islg = await fetch(url.isLoggedIn, {
-        method: 'GET',
-        // credentials: 'include',
-        headers: {
-          'Cookie': await AsyncStorage.getItem('@cookie')
-        }
-      });
-      const data_islg = await res_islg.json();
-      if (data_islg.ok == 1 && data_islg.result == 'yes') {
-        setLoginStatus(1);
-        try { //get user info
-          const res_uinfo = await fetch(url.getUserInfo, {
-            method: 'GET',
-            headers: {
-              'Cookie': await AsyncStorage.getItem('@cookie')
-            }
-          });
-          const data_uinfo = await res_uinfo.json();
-          if (data_uinfo.ok == 1) {
-            setUserInfo(data_uinfo.result);
-          }
-        } catch (err) {
-          console.error(err);
-        }
-      } else {
-        setLoginStatus(0);
-        setUserInfo({});
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  };
+  // const [realLgStatus, setRealLgStatus] = useState('');
+  // const [lgStatus, setLgStatus] = useState('');
+  // const [loStatus, setLoStatus] = useState('');
+  //
+  // async function status(){
+  //   const url_islg = url + '/isLoggedIn';
+  //   console.log(url_islg);
+  //   const res = await fetch(url_islg, {
+  //     credentials: 'include'
+  //   });
+  //   const res_json = await res.json();
+  //   console.log("login status/ ->" + JSON.stringify(res_json));
+  //   if (res_json.result == 'yes'){
+  //     setRealLgStatus('You are logged in ✅');
+  //   } else if (res_json.result == 'no'){
+  //     setRealLgStatus('You are not logged in ❌');
+  //   }
+  // }
+  //
+  // async function login(){
+  //   const url_login = url + '/login';
+  //   const res = await fetch(url_login, {
+  //     method: 'POST',
+  //     credentials: 'include',
+  //     headers: {
+  //       'Content-Type': 'application/json'
+  //     },
+  //     body: JSON.stringify({
+  //       id: 'kevin',
+  //       password: '123'
+  //     })
+  //   });
+  //   console.log('Res headers -> ');
+  //   for (var pair of res.headers.entries()) {
+  //     console.log(pair[0]+ ': '+ pair[1]);
+  //   }
+  //   const res_json = await res.json();
+  //   console.log("login/ ->" + JSON.stringify(res_json));
+  //   if (res_json.ok == 1){
+  //     setLgStatus('Login action✅');
+  //   } else {
+  //     setLgStatus('Login action❌');
+  //   }
+  // }
+  //
+  // async function logout(){
+  //   const url_logout = url + '/logout';
+  //   const res = await fetch(url_logout, {
+  //     credentials: 'include'
+  //   });
+  //   const res_json = await res.json();
+  //   console.log("logout/ ->" + JSON.stringify(res_json));
+  //   if (res_json.ok == 1){
+  //     setLoStatus('Logout action✅');
+  //   } else {
+  //     setLoStatus('Logout action❌');
+  //   }
+  // }
 
-  useEffect(() => {
-    const prep = async() => {
-      update();
-    };
-    prep();
-  }, []);
+  // <Button title='Login' onPress={() => login()} />
+  // <Button title='Logout' onPress={() => logout()} />
+  // <Button title='Check Status' onPress={() => status()} />
+  // <Button title='cookies' onPress={() => cookie()} />
+  // <View><Text>{realLgStatus}</Text></View>
+  // <View><Text>{lgStatus}</Text></View>
+  // <View><Text>{loStatus}</Text></View>
 
-  const login = async() => {
-    let errorCode = '-1';
-    try {
-      const res_newid = await fetch(url.isIDNew+`?id=${id}`);
-      const data_newid = await res_newid.json();
-      if (data_newid.ok == 1) {
-        if (data_newid.result == 'yes') {
-          // Register
-          const res_register = await fetch(url.register, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              id: id,
-              password: pwd
-            })
-          });
-          const data_register = await res_register.json();
-          if (data_register.ok == 1) {
-            console.log('Registered...');
-            Toast.show('Registered👌');
-            login();
-          } else {
-            // Register failed
-            errorCode = '3';
-            Toast.show(`Registration Failed: ${data_register.msg}❌`);
-          }
-        } else {
-          // Login
-          const res_login = await fetch(url.login, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              id: id,
-              password: pwd
-            })
-          });
-          const data_login = await res_login.json();
-          if (data_login.ok == 1) {
-            const cookie = res_login.headers.get('Set-Cookie');
-            await AsyncStorage.setItem('@cookie', cookie);
-            console.log(`Cookie[${cookie}] has been saved locally...`);
-            console.log('Logged In');
-            Toast.show('Logged In🎉');
-            // other tasks
-            setID(''); //clear inputs
-            setPWD('');
-            await fetch(url.clearCookie); //clear real cookie, avoid it being sent to server in the future
-            await update(); //update login status
-          } else {
-            // Login failed
-            errorCode = '4';
-            Toast.show(`Login Failed: ${data_login.msg}❌`);
-          }
-        }
-      } else {
-        errorCode = '2';
-        Toast.show(`Error #${errorCode}: ${data_newid.msg}❌`);
-      }
-    } catch (err) {
-      console.error(err);
-      errorCode = '1';
-      Toast.show(`Network Error🔗❌`);
-    }
-  };
-
-  const logout = async() => {
-    await fetch(url.logout);
-    await AsyncStorage.removeItem('@cookie');
-    //userInfo will be wiped automatically in update()
-    Toast.show('Logged Out👌');
-    await update();
-  }
+  const [bgcolor, setBgcolor] = useState('white');
 
   return(
-    <View>
-      {(loginStatus == 1) ?
-      <View style={styles.individual_container}>
-        <View style={styles.loggedin_symbol_container}><Text style={styles.loggedin_symbol}>✅</Text></View>
-        <View>
-          <Text style={styles.loggedin_text}>You're Logged In as
-            <Text style={styles.loggedin_text_name}> @{userInfo.ID}</Text>
-          </Text>
-        </View>
-        <View style={styles.logout_button_container}>
-          <MyButton title='Logout' onPress={() => logout()} />
-        </View>
-      </View>
-      :
-      <View style={styles.individual_container}>
-        <View style={styles.title_all_container}>
-          <View><Text style={styles.title_text}>Login to Your Account</Text></View>
-          <View><Text style={styles.title_note_text}>(New users are automatically registered)</Text></View>
-        </View>
-        <View style={styles.input_all_container}>
-          <View style={styles.input_labels_container}>
-            <View><Text style={styles.input_labels}>ID</Text></View>
-            <View><Text style={styles.input_labels}>Password</Text></View>
-          </View>
-          <View style={styles.input_boxs_container}>
-            <View><TextInput style={styles.input_boxs} value={id} onChangeText={(t) => setID(t)} placeholder='🆔'/></View>
-            <View><TextInput style={styles.input_boxs} value={pwd} onChangeText={(t) => setPWD(t)} secureTextEntry={true} placeholder='🔑'/></View>
+    <BGColorContext.Provider value={bgcolor}>
+      <BGColorContext.Consumer>
+      {value =>
+        <View style={{flex: 1,justifyContent: 'center',alignItems: 'center',backgroundColor: value}}>
+          <View style={styles.container}>
+            <Text style={styles.text_title}>Days <Text style={styles.text}>by Yuxuan</Text></Text>
+            <Text style={styles.text}>App Version: 0.2</Text>
+            <View style={{marginTop: 3}}></View>
+            <Text style={styles.text_italic}>   React Native</Text>
+            <Text style={styles.text_italic}>         + Express.js!</Text>
+            <MyButton title="Change Theme" onPress={() => {bgcolor == 'white' ? setBgcolor('#202020'):setBgcolor('white')}} />
           </View>
         </View>
-        <View>
-          <MyButton title='Login/Register' onPress={() => login()} />
-        </View>
-      </View>}
-    </View>
-  );
-
-
+      }
+      </BGColorContext.Consumer>
+    </BGColorContext.Provider>
+  )
 };
 
 const styles = StyleSheet.create({
-  individual_container: {
-    width: '100%',
-    height: '100%',
+  all: {
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center'
   },
-  title_all_container: {
-    alignItems: 'center'
+  container: {
   },
-  title_text: {
-    color: 'darkslategray',
-    fontSize: 27.5,
-  },
-  title_note_text: {
-    color: 'gray',
-    marginTop: 3,
-    fontSize: 13
-  },
-  input_all_container: {
-    flexDirection: 'row',
-    marginTop: 10
-  },
-  input_labels_container: {
-    marginRight: 6
-  },
-  input_boxs_container: {
-  },
-  input_labels: {
-    textAlign: 'right',
-    color: 'dimgray',
-    fontSize: 19
-  },
-  input_boxs: {
-    fontSize: 19,
-    color: 'dimgray',
-    width: 90,
-    textAlign: 'center'
-  },
-  loggedin_symbol_container: {
-    margin: 10
-  },
-  loggedin_symbol: {
-    marginTop: 15,
-    fontSize: 45
-  },
-  loggedin_text: {
-    fontSize: 19,
-    color: 'gray',
-  },
-  loggedin_text_name: {
-    fontSize: 21,
+  text_title: {
     color: 'slategray',
+    fontSize: 17,
     fontWeight: 'bold'
   },
-  logout_button_container: {
-    marginTop: 10
+  text: {
+    color: 'gray',
+    fontSize: 15
+  },
+  text_italic: {
+    fontStyle: 'italic',
+    color: 'indigo',
+    fontSize: 15
   }
-
-
 });
 
-
-
-export default AccountScreen;
+export default SettingsScreen;
