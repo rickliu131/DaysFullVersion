@@ -1,11 +1,12 @@
-'use strict';
+// 'use strict';
 
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Button } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
-
 import url from './url';
+import MyButton from './MyButton';
+
+const BGColorContext = React.createContext(null);
 
 function SettingsScreen() {
 
@@ -76,16 +77,25 @@ function SettingsScreen() {
   // <View><Text>{lgStatus}</Text></View>
   // <View><Text>{loStatus}</Text></View>
 
+  const [bgcolor, setBgcolor] = useState('white');
+
   return(
-    <View style={styles.all}>
-      <View style={styles.container}>
-        <Text style={styles.text_title}>Days <Text style={styles.text}>by Yuxuan</Text></Text>
-        <Text style={styles.text}>App Version: 0.2</Text>
-        <View style={{marginTop: 3}}></View>
-        <Text style={styles.text_italic}>   React Native</Text>
-        <Text style={styles.text_italic}>         + Express.js!</Text>
-      </View>
-    </View>
+    <BGColorContext.Provider value={bgcolor}>
+      <BGColorContext.Consumer>
+      {value =>
+        <View style={{flex: 1,justifyContent: 'center',alignItems: 'center',backgroundColor: value}}>
+          <View style={styles.container}>
+            <Text style={styles.text_title}>Days <Text style={styles.text}>by Yuxuan</Text></Text>
+            <Text style={styles.text}>App Version: 0.2</Text>
+            <View style={{marginTop: 3}}></View>
+            <Text style={styles.text_italic}>   React Native</Text>
+            <Text style={styles.text_italic}>         + Express.js!</Text>
+            <MyButton title="Change Theme" onPress={() => {bgcolor == 'white' ? setBgcolor('#202020'):setBgcolor('white')}} />
+          </View>
+        </View>
+      }
+      </BGColorContext.Consumer>
+    </BGColorContext.Provider>
   )
 };
 
